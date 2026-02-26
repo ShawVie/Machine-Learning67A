@@ -69,7 +69,7 @@ if selected == 'BMI':
     else:
         Gender = 0
 
-    Height = st.number_input('Height (cm)', min_value=50.0, max_value=250.0)
+    Height = st.number_input('Height (cm)', min_value=50, max_value=250)
     Weight = st.number_input('Weight (kg)', min_value=10.0, max_value=300.0)
 
     if st.button('Predict'):
@@ -144,6 +144,7 @@ if selected == 'Used_cars':
 
 
     st.success(Price_predict)
+
 
 
 
