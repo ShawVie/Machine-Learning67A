@@ -54,24 +54,51 @@ with st.sidebar:
     selected = option_menu('Prediction',
                            ['Ridingmower','Used_cars','BMI'])
 
-if selected== 'BMI':
+if selected == 'BMI':
     st.title('BMI Classification')
-    
-    Gender = st.text_input('Gender')
-    Height = st.text_input('Height')
-    Weight = st.text_input('Weight')
-    bmi_prediction = ''
+
+    # 🔽 Dropdown สำหรับ Gender
+    gender_option = st.selectbox(
+        'Gender',
+        ('Male', 'Female')
+    )
+
+    # แปลงค่าให้ตรงกับ dataset (จากรูปเห็นว่า 1 และ 0)
+    if gender_option == 'Male':
+        Gender = 1
+    else:
+        Gender = 0
+
+    Height = st.number_input('Height (cm)', min_value=50.0, max_value=250.0)
+    Weight = st.number_input('Weight (kg)', min_value=10.0, max_value=300.0)
+
     if st.button('Predict'):
+
         bmi_prediction = bmi_model.predict([[
-            float(Gender),
-            float(Height)
-            float(Weight)
-            ]])
-        if bmi_prediction[0]==1:
-            bmi_prediction = 'Owner'
-        else:
-            bmi_prediction = 'Non Owner'
-    st.success(bmi_prediction)
+            Gender,
+            Height,
+            Weight
+        ]])
+
+        bmi_class = int(bmi_prediction[0])
+
+        # Mapping BMI Class
+        bmi_dict = {
+            0: 'Extremely Weak',
+            1: 'Weak',
+            2: 'Normal',
+            3: 'Overweight',
+            4: 'Obesity',
+            5: 'Extreme Obesity'
+        }
+
+        result = bmi_dict.get(bmi_class, 'Unknown')
+
+        # คำนวณ BMI จริง
+        bmi_value = Weight / ((Height / 100) ** 2)
+
+        st.info(f'Calculated BMI: {bmi_value:.2f}')
+        st.success(f'BMI Category: {result}')
 
 
 if selected== 'Ridingmower':
@@ -117,6 +144,7 @@ if selected == 'Used_cars':
 
 
     st.success(Price_predict)
+
 
 
 
